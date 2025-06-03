@@ -68,21 +68,31 @@ func init_room():
 	set_z_index( 0 if not game else game.get_room_z_index(data.name) )
 	region = data.region
 	
-	if game is Prime:
+	if game is Prime or true:
 		create_bitmap_from_room_image(data.texture.get_image(), false, true)
 		
-		var x1 : float = data.aabb[0]
-		var y1 : float = data.aabb[1]
-		var _z1 : float = data.aabb[2]
-		var x2 : float = data.aabb[3]
-		var y2 : float = data.aabb[4]
-		var _z2 : float = data.aabb[5]
+		var all_x = []
+		var all_y = []
+		for ele in data.json["extra"]["minimap_coordinates"]:
+			all_x.append(ele["x"])
+			all_y.append(ele["y"])
+		all_x.sort()
+		all_y.sort()
 		
-		position.x = x1
-		position.y = y1
+		var x1 : float = 10
+		var y1 : float = 10
+		var x2 : float = 20
+		var y2 : float = 20
 		
-		custom_minimum_size.x = abs(x2 - x1)
-		custom_minimum_size.y = abs(y2 - y1)
+		if len(all_x) > 0:
+			position.x = all_x[0] * 24
+			position.y = all_y[0] * 16
+		else:
+			position.x = 10
+			position.y = 10
+		
+		custom_minimum_size.x = data.texture.get_width() / 10
+		custom_minimum_size.y = data.texture.get_height() / 10
 		
 		material = OUTLINE_SHADER.duplicate()
 		material.set_shader_parameter(&"pattern", 1)

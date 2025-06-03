@@ -45,6 +45,7 @@ func get_color() -> Color:
 		"morph_ball" : Color.ORCHID,
 	}
 	
+	return Color.SKY_BLUE
 	if is_door():
 		return DOOR_COLOR_MAP[default_dock_weakness]
 	return COLOR_MAP[type]
@@ -55,7 +56,7 @@ func get_texture() -> Texture2D:
 		"teleporter" : preload("res://data/icons/node marker/teleporter_marker.png"),
 		"morph_ball" : preload("res://data/icons/node marker/node_marker.png")
 	}
-	return TEXTURE_MAP[type]
+	return TEXTURE_MAP["door"]
 
 func is_door() -> bool:
 	return type == "door"

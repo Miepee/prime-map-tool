@@ -2,6 +2,7 @@ class_name NodeData extends Resource
 
 @export var region : StringName
 @export var room_name : String
+@export var data : RoomData
 @export var name : String
 @export var coordinates : Vector3
 @export var connections : Array[NodeData]
@@ -18,6 +19,8 @@ static func create_data_from_type(type : String) -> NodeData:
 			data = GenericNodeData.new()
 		"event":
 			data = EventNodeData.new()
+		"hint":
+			data = GenericNodeData.new()
 		_:
 			assert(false, "Unhandled NodeData type: %s" % type)
 	
@@ -26,8 +29,10 @@ static func create_data_from_type(type : String) -> NodeData:
 func init(_game : Game, _name : String, _room_data : RoomData, _data : Dictionary) -> void:
 	region = _room_data.region
 	room_name = _room_data.name
+	data = _room_data
 	name = _name
 	
+	coordinates = Vector3(_data["coordinates"]["x"], _data["coordinates"]["y"], 0)
 	if _game is Prime:
 		coordinates = Vector3(
 			_data.extra.world_position[0],

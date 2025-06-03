@@ -9,6 +9,8 @@ static func create_from_game_name(name : String):
 	match name:
 		"prime1":
 			return Prime.new(rdv_header)
+		"fusion":
+			return Game.new(rdv_header)
 		_:
 			push_error("Failed to create game: %s" % name)
 	

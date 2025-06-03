@@ -41,8 +41,8 @@ func _ready() -> void:
 	init_node()
 
 func _input(event: InputEvent) -> void:
-	if event is InputEventMouseMotion:
-		_is_hovered = rect.has_point(get_local_mouse_position())
+	#if event is InputEventMouseMotion:
+		#_is_hovered = rect.has_point(get_local_mouse_position())
 	
 	if _is_hovered and event.is_action("press") and event.is_pressed():
 		_node_clicked()

@@ -10,7 +10,7 @@ var hovered_room : Room = null
 
 func room_hover(room : Room) -> void:
 	region_name_label.text = room.data.region
-	room_name_label.text = room.name
+	room_name_label.text = room.name + " - DEBUG (" + str(room.position.x) + "," + str(room.position.y) + ")"
 	
 	hovered_room = room
 

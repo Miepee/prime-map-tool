@@ -36,11 +36,13 @@ const ARTIFACT_NAMES : Array[String] = ["Truth", "Strength", "Elder", "Wild", "L
 
 func _ready() -> void:
 	super()
+	return
 	connect_signals()
 	init_item_buttons()
 	update()
 
 func connect_signals() -> void:
+	return
 	missile_slider.value_changed.connect(missile_slider_changed)
 	missile_slider.drag_ended.connect(dragged_slider.bind(missile_slider, "Missile"))
 	pb_slider.value_changed.connect(pb_slider_changed)
@@ -86,6 +88,7 @@ func init_item_buttons() -> void:
 		
 
 func update() -> void:
+	return
 	var game := GameMap.get_game()
 	
 	update_missle_pb_settings()
@@ -103,6 +106,7 @@ func update() -> void:
 	items_changed.emit()
 
 func dragged_slider(changed : bool, slider : HSlider, item_name : String) -> void:
+	return
 	if not changed:
 		return
 	

@@ -5,7 +5,7 @@ static var game : Game = null
 static func get_game() -> Game:
 	return game
 static func _static_init() -> void:
-	game = GameFactory.create_from_game_name("prime1")
+	game = GameFactory.create_from_game_name("fusion")
 	game.all()
 
 signal map_drawn(dock_connections : Dictionary[NodeMarker, NodeMarker])
@@ -45,7 +45,7 @@ func init_map() -> void:
 	for r in rdv_logic:
 		var region := Control.new()
 		region_nodes[r] = region
-		region.set_scale(Vector2(1, -1)) # Flip vertically
+		#region.set_scale(Vector2(1, -1)) # Flip vertically
 		region.set_name(r)
 		add_child(region)
 		region.set_position( game.get_region_offset(r) )
@@ -112,7 +112,7 @@ func init_nodes() -> void:
 			var room_data : RoomData = world_data[r][j]
 			room_data.clear_nodes()
 			
-			var default_node_name : String = rdv_logic[r]["areas"][j]["default_node"]
+			var default_node_name : String = ""#rdv_logic[r]["areas"][j]["default_node"]
 			var nodes : Array[NodeData] = []
 			for k in rdv_logic[r]["areas"][j]["nodes"]:
 				if k == "Pickup (Items Every Room)":
@@ -271,7 +271,7 @@ func resolve_map() -> void:
 	#print_stack()
 	
 	if not start_node:
-		start_node = get_node_data("Tallon Overworld", "Landing Site", "Ship")
+		start_node = get_node_data("Main Deck", "Docking Bay Hangar", "Ship")
 	
 	set_all_unreachable()
 	

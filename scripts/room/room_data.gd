@@ -3,6 +3,7 @@ class_name RoomData extends Resource
 @export var region : StringName
 @export var name : String
 @export var texture : Texture2D
+@export var json : Dictionary
 @export var aabb : Array[float]
 
 @export var nodes : Array[NodeData]
@@ -11,6 +12,7 @@ class_name RoomData extends Resource
 func init(_game : Game, _region : StringName, _name : String, _data : Dictionary) -> void:
 	region = _region
 	name = _name
+	json = _data
 	texture = get_room_texture()
 	
 	if _game is Prime:
@@ -24,7 +26,7 @@ func init(_game : Game, _region : StringName, _name : String, _data : Dictionary
 			]
 
 func get_room_texture() -> Texture2D:
-	return load("res://data/games/prime1/room_images/%s/%s.png" % [region, name])
+	return load("res://data/games/fusion/room_images/%s.png" % [json["extra"]["map_name"]])
 
 func clear_nodes() -> void:
 	nodes.clear()

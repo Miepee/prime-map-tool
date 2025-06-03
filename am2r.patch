@@ -1,0 +1,332 @@
+diff --git a/resources/base_room.tscn b/resources/base_room.tscn
+index 3f0efb7..e5174c8 100644
+--- a/resources/base_room.tscn
++++ b/resources/base_room.tscn
+@@ -7,5 +7,4 @@ mouse_filter = 1
+ mouse_default_cursor_shape = 2
+ ignore_texture_size = true
+ stretch_mode = 6
+-flip_v = true
+ script = ExtResource("1_qal52")
+diff --git a/scripts/camera.gd b/scripts/camera.gd
+index 97838bd..7076766 100644
+--- a/scripts/camera.gd
++++ b/scripts/camera.gd
+@@ -1,7 +1,7 @@
+ extends Camera2D
+ 
+ const ZOOM_RATE : float = 0.07
+-const MIN_ZOOM : float = 4.0
++const MIN_ZOOM : float = 8.0
+ const MAX_ZOOM : float = 0.33
+ const START_ZOOM : float = MAX_ZOOM
+ const CENTER_ZOOM : float = 2.5
+@@ -9,9 +9,9 @@ const ZOOM_WEIGHT : float = 0.15
+ const DRAG_WEIGHT : float = 0.3
+ 
+ const X_MAX_POS := 3200.0
+-const X_MIN_POS := -50.0
++const X_MIN_POS := -500.0
+ const Y_MAX_POS := 2100.0
+-const Y_MIN_POS := -900.0
++const Y_MIN_POS := -1500.0
+ const Y_START_OFFSET := 50.0
+ 
+ var current_zoom : float = START_ZOOM:
+diff --git a/scripts/elevator_manager.gd b/scripts/elevator_manager.gd
+index 74bc847..058ce3d 100644
+--- a/scripts/elevator_manager.gd
++++ b/scripts/elevator_manager.gd
+@@ -1,6 +1,6 @@
+ extends Control
+ 
+-const VANILLA_ELEVATOR_DATA := {
++const VANILLA_ELEVATOR_DATA_ := {
+ 	"Phendrana Drifts/Transport to Magmoor Caverns West/Teleporter to Magmoor Caverns": "Magmoor Caverns/Transport to Phendrana Drifts North/Teleporter to Phendrana Drifts",
+ 	"Phendrana Drifts/Transport to Magmoor Caverns South/Teleporter to Magmoor Caverns": "Magmoor Caverns/Transport to Phendrana Drifts South/Teleporter to Phendrana Drifts",
+ 	"Magmoor Caverns/Transport to Chozo Ruins North/Teleporter to Chozo Ruins": "Chozo Ruins/Transport to Magmoor Caverns North/Teleporter to Magmoor Caverns",
+@@ -20,6 +20,7 @@ const VANILLA_ELEVATOR_DATA := {
+ 	"Chozo Ruins/Transport to Tallon Overworld East/Teleporter to Tallon Overworld": "Tallon Overworld/Transport to Chozo Ruins East/Teleporter to Chozo Ruins",
+ 	"Chozo Ruins/Transport to Tallon Overworld South/Teleporter to Tallon Overworld": "Tallon Overworld/Transport to Chozo Ruins South/Teleporter to Chozo Ruins"
+ }
++const VANILLA_ELEVATOR_DATA := {}
+ const IGNORE_REGIONS : Array[String] = ["Frigate Orpheon", "Impact Crater", "End of Game"]
+ const LINE_WIDTH : float = 4.0
+ const LINE_CAPS := Line2D.LINE_CAP_ROUND
+@@ -55,8 +56,8 @@ func init_elevators(dock_connections : Dictionary = VANILLA_ELEVATOR_DATA) -> vo
+ 	color_map.clear()
+ 	
+ 	var connections := dock_connections.duplicate()
+-	connections.merge(MINES_SUBREGIONS.duplicate())
+-	connections.merge(PHEN_SUBREGIONS.duplicate())
++	#connections.merge(MINES_SUBREGIONS.duplicate())
++	#connections.merge(PHEN_SUBREGIONS.duplicate())
+ 	
+ 	var drawn : Array[String] = []
+ 	
+diff --git a/scripts/game/game.gd b/scripts/game/game.gd
+index 6634f85..f6db40d 100644
+--- a/scripts/game/game.gd
++++ b/scripts/game/game.gd
+@@ -9,6 +9,8 @@ static func create_from_game_name(name : String):
+ 	match name:
+ 		"prime1":
+ 			return Prime.new(rdv_header)
++		"am2r":
++			return Game.new(rdv_header)
+ 		_:
+ 			push_error("Failed to create game: %s" % name)
+ 	
+diff --git a/scripts/game_map/game_map.gd b/scripts/game_map/game_map.gd
+index 46af47e..d08aab8 100644
+--- a/scripts/game_map/game_map.gd
++++ b/scripts/game_map/game_map.gd
+@@ -20,7 +20,7 @@ var room_map : Dictionary[RoomData, Room] = {}
+ var start_node : NodeData = null
+ 
+ func _ready() -> void:
+-	game = Game.create_from_game_name("prime1")
++	game = Game.create_from_game_name("am2r")
+ 	
+ 	inventory_interface.items_changed.connect(resolve_map)
+ 	trick_interface.tricks_changed.connect(resolve_map)
+@@ -41,7 +41,7 @@ func init_map() -> void:
+ 	for r in rdv_logic:
+ 		var region := Control.new()
+ 		region_nodes[r] = region
+-		region.set_scale(Vector2(1, -1)) # Flip vertically
++		#region.set_scale(Vector2(1, -1)) # Flip vertically
+ 		region.set_name(r)
+ 		add_child(region)
+ 		region.set_position( game.get_region_offset(r) )
+@@ -109,7 +109,7 @@ func init_nodes() -> void:
+ 			var room_data : RoomData = world_data[r][j]
+ 			room_data.clear_nodes()
+ 			
+-			var default_node_name : String = rdv_logic[r]["areas"][j]["default_node"]
++			var default_node_name : String = ""# rdv_logic[r]["areas"][j]["default_node"]
+ 			var nodes : Array[NodeData] = []
+ 			for k in rdv_logic[r]["areas"][j]["nodes"]:
+ 				if k == "Pickup (Items Every Room)":
+@@ -241,7 +241,7 @@ func resolve_map() -> void:
+ 	#print_stack()
+ 	
+ 	if not start_node:
+-		start_node = get_node_data("Tallon Overworld", "Landing Site", "Ship")
++		start_node = get_node_data("Main Caves", "Landing Site", "Ship")
+ 	
+ 	set_all_unreachable()
+ 	
+diff --git a/scripts/node data/dock_node_data.gd b/scripts/node data/dock_node_data.gd
+index bca2b02..0af9a44 100644
+--- a/scripts/node data/dock_node_data.gd	
++++ b/scripts/node data/dock_node_data.gd	
+@@ -13,9 +13,9 @@ func init(_name : String, room_data : RoomData, data : Dictionary) -> void:
+ 	
+ 	if is_door():
+ 		rotation = Vector3(
+-			data["extra"]["world_rotation"][0],
+-			data["extra"]["world_rotation"][1],
+-			data["extra"]["world_rotation"][2]
++			0,
++			0,
++			0
+ 		)
+ 
+ func get_color() -> Color:
+@@ -43,7 +43,7 @@ func get_color() -> Color:
+ 		"teleporter" : Color.PURPLE,
+ 		"morph_ball" : Color.ORCHID,
+ 	}
+-	
++	return Color.DEEP_SKY_BLUE
+ 	if is_door():
+ 		return DOOR_COLOR_MAP[default_dock_weakness]
+ 	return COLOR_MAP[type]
+@@ -54,7 +54,7 @@ func get_texture() -> Texture2D:
+ 		"teleporter" : preload("res://data/icons/node marker/teleporter_marker.png"),
+ 		"morph_ball" : preload("res://data/icons/node marker/node_marker.png")
+ 	}
+-	return TEXTURE_MAP[type]
++	return TEXTURE_MAP["door"]
+ 
+ func is_door() -> bool:
+ 	return type == "door"
+diff --git a/scripts/node data/node_data.gd b/scripts/node data/node_data.gd
+index 8c5a80a..1cf52d1 100644
+--- a/scripts/node data/node_data.gd	
++++ b/scripts/node data/node_data.gd	
+@@ -28,9 +28,7 @@ func init(_name : String, room_data : RoomData, data : Dictionary) -> void:
+ 	room_name = room_data.name
+ 	name = _name
+ 	coordinates = Vector3(
+-		data["extra"]["world_position"][0],
+-		data["extra"]["world_position"][1],
+-		data["extra"]["world_position"][2]
++		data["coordinates"]["x"], data["coordinates"]["y"], 0
+ 	)
+ 
+ func get_color() -> Color:
+diff --git a/scripts/room.gd b/scripts/room.gd
+index 21d921a..61b0cb4 100644
+--- a/scripts/room.gd
++++ b/scripts/room.gd
+@@ -16,11 +16,15 @@ const OUTLINE_SHADER := preload("res://resources/highlight_shader.tres")
+ const COLOR_CHANGE_DURATION : float = 0.2
+ 
+ const ROOM_COLOR : Dictionary[StringName, Color] = {
+-	&"Chozo Ruins" : Color("#EA8C55"),
+-	&"Phendrana Drifts" : Color("#C9D6EA"),
+-	&"Tallon Overworld" : Color("#7FB685"),
+-	&"Phazon Mines" : Color("#BC96E6"),
+-	&"Magmoor Caverns" : Color("#A7333F"),
++	&"Distribution Center" : Color("#FFFFFF"),
++	&"Genetics Laboratory" : Color("#FFFFFF"),
++	&"GFS Thoth" : Color("#FFFFFF"),
++	&"Golden Temple" : Color("#FFFFFF"),
++	&"Hydro Station" : Color("#FFFFFF"),
++	&"Industrial Complex" : Color("#FFFFFF"),
++	&"Main Caves" : Color("#FFFFFF"),
++	&"The Depths" : Color("#FFFFFF"),
++	&"The Tower" : Color("#FFFFFF"),
+ }
+ ## Rooms that need to have their z index increased to better match the game
+ const MANUAL_Z_ROOMS : Array[String] = [
+@@ -79,7 +83,6 @@ func _ready() -> void:
+ func init_room():
+ 	if data.name in MANUAL_Z_ROOMS:
+ 		z_index += 1
+-	
+ 	var image := data.texture.get_image()
+ 	image.flip_y()
+ 	var bitmap := BitMap.new()
+@@ -90,18 +93,28 @@ func init_room():
+ 	region = data.region
+ 	set_name(data.name)
+ 	
+-	var x1 : float = data.aabb[0]
+-	var y1 : float = data.aabb[1]
+-	var _z1 : float = data.aabb[2]
+-	var x2 : float = data.aabb[3]
+-	var y2 : float = data.aabb[4]
+-	var _z2 : float = data.aabb[5]
+-	
+-	position.x = x1
+-	position.y = y1
+-	
+-	custom_minimum_size.x = abs(x2 - x1)
+-	custom_minimum_size.y = abs(y2 - y1)
++	var all_x = []
++	var all_y = []
++	for ele in data.json["extra"]["minimap_data"]:
++		all_x.append(ele["x"])
++		all_y.append(ele["y"])
++	all_x.sort()
++	all_y.sort()
++	
++	var x1 : float = 10
++	var y1 : float = 10
++	var x2 : float = 20
++	var y2 : float = 20
++	
++	if len(all_x) > 0:
++		position.x = all_x[0] * 32
++		position.y = all_y[0] * 24
++	else:
++		position.x = 10
++		position.y = 10
++	
++	custom_minimum_size.x = data.texture.get_width() / 10
++	custom_minimum_size.y = data.texture.get_height() / 10
+ 	
+ 	material = OUTLINE_SHADER.duplicate()
+ 	material.set_shader_parameter(&"pattern", 1)
+@@ -171,5 +184,5 @@ func get_outline_width() -> float:
+ 
+ func get_global_center() -> Vector2:
+ 	var tmp = size
+-	tmp.y *= -1
++	#tmp.y *= -1
+ 	return global_position + (tmp * 0.5)
+diff --git a/scripts/room_data.gd b/scripts/room_data.gd
+index 4fbee3c..c3f60d7 100644
+--- a/scripts/room_data.gd
++++ b/scripts/room_data.gd
+@@ -3,26 +3,19 @@ class_name RoomData extends Resource
+ @export var region : StringName
+ @export var name : String
+ @export var texture : Texture2D
+-@export var aabb : Array[float]
+-
++@export var json : Dictionary
+ @export var nodes : Array[NodeData]
+ @export var default_node : NodeData
+ 
+ func init(_region : StringName, _name : String, data : Dictionary) -> void:
+ 	region = _region
+ 	name = _name
++	json = data
+ 	texture = get_room_texture()
+-	aabb = [
+-		data["extra"]["aabb"][0],
+-		data["extra"]["aabb"][1],
+-		data["extra"]["aabb"][2],
+-		data["extra"]["aabb"][3],
+-		data["extra"]["aabb"][4],
+-		data["extra"]["aabb"][5]
+-	]
++	
+ 
+ func get_room_texture() -> Texture2D:
+-	return load("res://data/games/prime1/room_images/%s/%s.png" % [region, name])
++	return load("res://data/games/am2r/room_images/%s.png" % [json["extra"]["map_name"]])
+ 
+ func clear_nodes() -> void:
+ 	nodes.clear()
+diff --git a/scripts/ui.gd b/scripts/ui.gd
+index cf85097..bba5dbe 100644
+--- a/scripts/ui.gd
++++ b/scripts/ui.gd
+@@ -10,7 +10,7 @@ var hovered_room : Room = null
+ 
+ func room_hover(room : Room) -> void:
+ 	region_name_label.text = room.data.region
+-	room_name_label.text = room.name
++	room_name_label.text = room.name + " - DEBUG (" + str(room.position.x) + "," + str(room.position.y) + ")"
+ 	
+ 	hovered_room = room
+ 
+diff --git a/scripts/ui_tab/inventory_interface.gd b/scripts/ui_tab/inventory_interface.gd
+index 77d9a18..b9edbca 100644
+--- a/scripts/ui_tab/inventory_interface.gd
++++ b/scripts/ui_tab/inventory_interface.gd
+@@ -44,11 +44,13 @@ static func get_inventory() -> Game:
+ 
+ func _ready() -> void:
+ 	super()
++	return
+ 	connect_signals()
+ 	init_item_buttons()
+ 	update()
+ 
+ func connect_signals() -> void:
++	return
+ 	missile_slider.value_changed.connect(missile_slider_changed)
+ 	missile_slider.drag_ended.connect(dragged_slider.bind(missile_slider, "Missile"))
+ 	pb_slider.value_changed.connect(pb_slider_changed)
+@@ -100,6 +102,7 @@ func init_item_buttons() -> void:
+ 		
+ 
+ func update() -> void:
++	return
+ 	update_missle_pb_settings()
+ 	
+ 	# Sliders and Labels
+@@ -115,6 +118,7 @@ func update() -> void:
+ 	items_changed.emit()
+ 
+ func dragged_slider(changed : bool, slider : HSlider, item_name : String) -> void:
++	return
+ 	if not changed:
+ 		return
+ 	
