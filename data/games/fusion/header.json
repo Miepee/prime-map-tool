@@ -2919,6 +2919,7 @@
     },
     "flatten_to_set_on_patch": false,
     "regions": [
-        "Main Deck.json"
+        "Main Deck.json",
+        "Sector 1 SRX.json"
     ]
 }
