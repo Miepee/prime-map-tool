@@ -32,7 +32,7 @@ func _init(rdv_header : Dictionary) -> void:
 	
 	## Map of room names and their z-indices
 	## Use this if rooms need to be manually adjusted
-	# TODO: s2, 4, 5, 6
+	# TODO: s2, 4, 6
 	z_index_override = {
 		&"Docking Bay Hangar": 1,
 		&"Station Entrance": 2,
@@ -47,6 +47,7 @@ func _init(rdv_header : Dictionary) -> void:
 		&"Operations Room": -1,
 		&"Operations Deck Save Room": -1,
 		&"Operations Deck Recharge Room": -1,
+		&"Crew Quarters Save Room": 2,
 		
 		# West Main Deck
 		&"Main Elevator Cache": -1,
@@ -75,6 +76,17 @@ func _init(rdv_header : Dictionary) -> void:
 		&"Glass Tube to Sector 5 (ARC)": -1,
 		&"Main Boiler": -1,
 		&"Red Tower": 1,
+		
+		# Sector 5
+		&"Training Grounds": 1,
+		&"Security Save Room": -1,
+		&"Arctic Underside": -1,
+		&"Cellar": 1,
+		&"Frozen Tower": 1,
+		&"Mini-Fridge": 1,
+		&"Cellar Save Room": 1,
+		&"Flooded Access": 1,
+		
 		
 		
 	}
