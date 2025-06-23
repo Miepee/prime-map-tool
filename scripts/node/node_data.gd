@@ -72,7 +72,9 @@ func is_door() -> bool:
 	return is_dock() and ( get_dock_type() == &"door" )
 
 func is_teleporter() -> bool:
-	return is_dock() and ( get_dock_type() == &"teleporter" )
+	return is_dock() and ( 
+		get_dock_type() in [&"teleporter", &"Elevator", &"area_transition"] 
+	)
 
 func set_dock_type(_type : StringName) -> void:
 	extra.dock_type = _type

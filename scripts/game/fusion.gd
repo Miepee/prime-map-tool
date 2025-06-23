@@ -13,12 +13,12 @@ func _init(rdv_header : Dictionary) -> void:
 	## Each region is required to have an offset, even if it's Vector2.ZERO
 	region_offset = {
 		&"Main Deck": Vector2(1500,-500),
-		&"Sector 1 SRX": Vector2(1200,350),
-		&"Sector 2 TRO": Vector2(2400,350),
-		&"Sector 3 PYR": Vector2(100,350),
-		&"Sector 4 AQA": Vector2(2000,1200),
-		&"Sector 5 ARC": Vector2(600,1200),
-		&"Sector 6 NOC": Vector2(1400,1800),
+		&"Sector 1 (SRX)": Vector2(1200,350),
+		&"Sector 2 (TRO)": Vector2(2400,350),
+		&"Sector 3 (PYR)": Vector2(100,350),
+		&"Sector 4 (AQA)": Vector2(2000,1200),
+		&"Sector 5 (ARC)": Vector2(600,1200),
+		&"Sector 6 (NOC)": Vector2(1400,1800),
 	} 
 	
 	## Map of region names that contain subregions and their offsets in local coordinates
@@ -33,18 +33,60 @@ func _init(rdv_header : Dictionary) -> void:
 	## Map of room names and their z-indices
 	## Use this if rooms need to be manually adjusted
 	z_index_override = {
+		&"Docking Bay Hangar": 1,
+		&"Station Entrance": 2,
+		&"Central Nexus": 3,
+		&"Elevator to Habitation Deck": -1,		
+		&"Nexus Storage": 1,
+		&"Nexus Navigation Room": 2,
+		&"Sub-Zero Containment": 2,
+		
+		# East Main Deck
+		&"Operations Ventilation Storage": -1,
+		&"Operations Room": -1,
+		&"Operations Deck Save Room": -1,
+		&"Operations Deck Recharge Room": -1,
+		
+		# West Main Deck
+		&"Main Elevator Cache": -1,
+		&"Main Elevator Shaft": -1,
+		
+		# Reactor Core
+		&"Silo Entry": 1,
+		&"Silo Tunnel": 2,
+		&"Crew Quarters East": 2,
+		
+		# Sector 1
+		&"Glass Tube to Sector 3 (PYR)": -1,
+		&"Lava Lake Annex": -1,
+		&"Entrance Lobby": 1,
+		&"Antechamber": -1,
+		&"Yameba Corridor": 1,
+		&"Atmospheric Stabilizer Northwest": 2,
+		&"Hornoad Hole": 1,
+		&"Wall Jump Tutorial": 1,
+		&"Charge Core Arena": -1,
+		&"Charge Core Upper Access": -1,
+		&"Atmospheric Stabilizer Central": -1,
+		&"Tourian Save Room East": 1,
+		
+		# Sector 3
+		&"Glass Tube to Sector 5 (ARC)": -1,
+		&"Main Boiler": -1,
+		&"Red Tower": 1,
+		
 		
 	}
 	
 	## Map of region names and their color
 	region_color = {
 		&"Main Deck": Color.WHITE,
-		&"Sector 1 SRX": Color.WHITE,
-		&"Sector 2 TRO": Color.WHITE,
-		&"Sector 3 PYR": Color.WHITE,
-		&"Sector 4 AQA": Color.WHITE,
-		&"Sector 5 ARC": Color.WHITE,
-		&"Sector 6 NOC": Color.WHITE,
+		&"Sector 1 (SRX)": Color.WHITE,
+		&"Sector 2 (TRO)": Color.WHITE,
+		&"Sector 3 (PYR)": Color.WHITE,
+		&"Sector 4 (AQA)": Color.WHITE,
+		&"Sector 5 (ARC)": Color.WHITE,
+		&"Sector 6 (NOC)": Color.WHITE,
 	}
 	
 	## 2D Array describing how the inventory is displayed
