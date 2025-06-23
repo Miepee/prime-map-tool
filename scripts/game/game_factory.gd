@@ -11,6 +11,8 @@ static func create_from_game_name(name : String):
 			return Prime.new(rdv_header)
 		&"am2r":
 			return AM2R.new(rdv_header)
+		"fusion":
+			return Fusion.new(rdv_header)
 		_:
 			push_error("Failed to create game: %s" % name)
 	

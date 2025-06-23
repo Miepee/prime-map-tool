@@ -7,6 +7,7 @@ signal game_selected(game_id : StringName)
 const GAMES : Dictionary[StringName, StringName] = {
 	&"Metroid Prime" : &"prime1",
 	&"AM2R" :          &"am2r",
+	&"Metroid Fusion": &"fusion",
 }
 
 @export var options : OptionButton
