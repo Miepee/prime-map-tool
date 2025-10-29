@@ -158,6 +158,7 @@ func get_region_scale() -> Vector2:
 
 ## Collect and store data about rooms
 ## Room texture MUST be set
+@warning_ignore_start("integer_division") # https://github.com/godotengine/godot/issues/42966
 func init_room_data(_room_data : RoomData, _extra_data : Dictionary) -> void:
 	_room_data.extra.map_name = _extra_data.extra.map_name
 	
@@ -191,12 +192,9 @@ func init_room(room : Room) -> void:
 	room.custom_minimum_size.y = room.data.extra.image_height
 	
 	var outline_config := Room.OutlineConfig.new(
-		&"res://resources/highlight_shader.tres", # - Shader Path
-		0, # - Outline thickness
 		15, # - Outline thickness while hovered
 		25  # - Outline thickness for starting room
 	)
-	room.material = load( outline_config.shader_path ).duplicate()
 	room.config = outline_config
 
 ## Collect and store data about nodes
